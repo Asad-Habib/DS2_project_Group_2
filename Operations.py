@@ -8,12 +8,6 @@ from BST import Node
 
 
 def main():
-
-    results_BST = []
-    results_AVL = []
-    results_SkipList = []
-    final_lst = [] #list of tuples
-    num_tries = 11
     dataset_words = []
     dataset_numbers = []
 
@@ -33,11 +27,43 @@ def main():
             f.close()
     
 
+    results_words = operations(dataset_words)
+    results_numbers = operations(dataset_numbers)
+
+    with open('results_words.csv', mode='w') as csv_file: #open the csv file
+        headers = ['Operation', 'Time Taken']
+        results_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL) #create the writer object
+        results_writer.writerow(headers) #write the headers
+
+        for item in results_words: #for each tuple in the final list
+            results_writer.writerow([item[0], item[1]]) #write the tuple to the csv file
+        
+    csv_file.close()
+
+    with open('results_numbers.csv', mode='w') as csv_file: #open the csv file
+        headers = ['Operation', 'Time Taken']
+        results_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL) #create the writer object
+        results_writer.writerow(headers) #write the headers
+
+        for item in results_numbers: #for each tuple in the final list
+            results_writer.writerow([item[0], item[1]]) #write the tuple to the csv file
+        
+    csv_file.close()
+
+    
+
+
+def operations(dataset):
+    results_BST = []
+    results_AVL = []
+    results_SkipList = []
+    final_lst = [] #list of tuples
+    num_tries = 11
 
     for x in range(num_tries):
-        results_BST.append(operations_BST(dataset_words))
-        results_AVL.append(operations_AVL(dataset_words))
-        results_SkipList.append(operations_SkipList(dataset_words))
+        results_BST.append(operations_BST(dataset))
+        results_AVL.append(operations_AVL(dataset))
+        results_SkipList.append(operations_SkipList(dataset))
 
 
     #take average of all the values in the list of dictionaries
@@ -62,16 +88,8 @@ def main():
         
         final_lst.append((key, sum(temp)/len(temp)))
 
-    with open('results.csv', mode='w') as csv_file: #open the csv file
-        headers = ['Operation', 'Time Taken']
-        results_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL) #create the writer object
-        results_writer.writerow(headers) #write the headers
+    return final_lst
 
-        for item in final_lst: #for each tuple in the final list
-            results_writer.writerow([item[0], item[1]]) #write the tuple to the csv file
-
-    csv_file.close()
-    print(final_lst)
 
 
 def operations_BST(data:list):
